@@ -46,7 +46,7 @@ if [ "$MODALTYPE" == "Text_Only" ]; then
             --tf32 True \
             --model_max_length 4096 \
             --q_lora False \
-            --deepspeed ./scripts/zero3_offload.json \
+            --deepspeed ./scripts/zero3.json \
             --gradient_checkpointing True \
             --flash_attn False
     fi
@@ -58,11 +58,11 @@ elif [[ "$MODALTYPE" == "Vision_Only" || "$MODALTYPE" == "Vision_Text" ]]; then
     if [[ ${DATATYPE} == *"Aug"* ]]; then
         # augmentation dataset path
         data_path="../dataset/GITQA-${DATATYPE}/data/${TASK}/QA/Aug/${AUGTYPE}_train.json"
-        checkpoint_path="./checkpoints/${MODALTYPE}/${DATATYPE}/${TASK}/${AUGTYPE}/llava-v1.5-${MODELSIZE}-lora(${LORAR}, ${LORAALPHA})-${EPOCH}"
+        checkpoint_path="./checkpoints/${MODALTYPE}/${DATATYPE}/${TASK}/${AUGTYPE}/llava-v1.5-${MODELSIZE}-lora(${LORAR}, ${LORAALPHA})-epoch-${EPOCH}"
     else
         # base dataset path
         data_path="../dataset/GITQA-${DATATYPE}/data/${TASK}/QA/Base/${MODALTYPE}_train.json"
-        checkpoint_path="./checkpoints/${MODALTYPE}/${DATATYPE}/${TASK}/llava-v1.5-${MODELSIZE}-lora(${LORAR}, ${LORAALPHA})-${EPOCH}"
+        checkpoint_path="./checkpoints/${MODALTYPE}/${DATATYPE}/${TASK}/llava-v1.5-${MODELSIZE}-lora(${LORAR}, ${LORAALPHA})-epoch-${EPOCH}"
     fi
 
     if [ -f "$checkpoint_path/adapter_config.json" ]; then
@@ -71,7 +71,7 @@ elif [[ "$MODALTYPE" == "Vision_Only" || "$MODALTYPE" == "Vision_Text" ]]; then
         deepspeed --include localhost:"$GPU_IDS" --master_port "$PORT" llava/train/train_mem.py \
             --lora_enable True --lora_r "$LORAR" --lora_alpha "$LORAALPHA" \
             --mm_projector_lr 2e-5 \
-            --deepspeed ./scripts/zero3_offload.json \
+            --deepspeed ./scripts/zero3.json \
             --model_name_or_path "$pretrained_model_path" \
             --version v1 \
             --image_folder "$image_folder" \

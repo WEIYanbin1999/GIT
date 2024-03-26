@@ -241,7 +241,7 @@ conv_vicuna_v0 = Conversation(
 
 conv_vicuna_v1 = Conversation(
     system="A chat between a curious user and an artificial intelligence assistant. "
-           "The assistant gives helpful, detailed, and polite answers to the user's questions.",
+    "The assistant gives helpful, detailed, and polite answers to the user's questions.",
     roles=("USER", "ASSISTANT"),
     version="v1",
     messages=(),
@@ -370,7 +370,6 @@ Answer the questions.""",
 )
 
 default_conversation = conv_vicuna_v1
-
 conv_templates = {
     "default": conv_vicuna_v0,
     "v0": conv_vicuna_v0,
